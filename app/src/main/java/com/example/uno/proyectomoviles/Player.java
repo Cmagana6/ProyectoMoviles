@@ -16,7 +16,8 @@ public class Player {
     //velocidad del personaje (movimiento)
     private int speed = 0;
 
-    //constructor
+
+        //constructor
     public Player(Context context){
         x = 75;
         y = 50;
