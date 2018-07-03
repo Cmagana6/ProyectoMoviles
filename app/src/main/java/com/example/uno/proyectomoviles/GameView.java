@@ -29,7 +29,7 @@ public class GameView extends SurfaceView implements Runnable{
         super(context);
 
         //Inicializando el player
-        player = new Player(Context);
+        player = new Player(context);
 
         //Inicializando los objetos para dibujar
         surfaceHolder = getHolder();
