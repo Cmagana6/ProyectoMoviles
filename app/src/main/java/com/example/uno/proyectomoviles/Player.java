@@ -16,6 +16,20 @@ public class Player {
     //velocidad del personaje (movimiento)
     private int speed = 0;
 
+    //booleano para verificar si la nave esta acelerando
+    private boolean boosting;
+
+    //el valor de la gravedad que afecta al jugador
+    private final int GRAVITY = -10;
+
+    //para evitar que la nave salga de la pantalla
+    private int maxY;
+    private int minY;
+
+    //limita la velocidad de la nave
+    private final int MIN_SPEED = 1;
+    private final int MAX_SPEED = 20;
+
     //constructor
     public Player(Context context){
         x = 75;
@@ -24,16 +38,49 @@ public class Player {
 
         // agarrando el bitmap de drawable resources
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.player);
+        //boost es falso al principio
+        boosting = false;
+    }
+
+
+
+    //seteaando el estado de los booster
+    public void setBoosting(){
+        boosting = true;
+    }
+
+    public void stopBoosting(){
+        boosting = false;
     }
 
     //metodo para actualizar las coordenadas del personaje
     public void update(){
-        //actualizando coordenadas x
-        x++;
+        if (boosting){
+            speed += 2;
+        }else {
+            speed -= 5;
+        }
+        //control de maxima y minima velocidad
+        if (speed > MAX_SPEED){
+            speed = MAX_SPEED;
+        }
+        if (speed < MIN_SPEED){
+            speed = MIN_SPEED;
+        }
+
+        //aplicando gravedad
+        y -= speed + GRAVITY;
+
+        //control para que no se salga de la pantalla
+        if (y < minY){
+            y = minY;
+        }
+        if (y > maxY){
+            y = maxY;
+        }
     }
 
     // getters
-
     public Bitmap getBitmap() {
         return bitmap;
     }
