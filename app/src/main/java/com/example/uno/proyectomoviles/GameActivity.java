@@ -11,8 +11,8 @@ public class GameActivity  extends AppCompatActivity{
     private GameView gameView;
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
         //Inicializando el objeto gameView
         gameView = new GameView(this);
@@ -28,9 +28,7 @@ public class GameActivity  extends AppCompatActivity{
         gameView.pause();
     }
 
-    //Corriendo el juego cuando la actividad esta corriendo
-
-
+    //corre el juego cuando la actividad se vuelve a comenzar
     @Override
     protected void onResume() {
         super.onResume();

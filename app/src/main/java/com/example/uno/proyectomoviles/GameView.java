@@ -52,7 +52,8 @@ public class GameView extends SurfaceView implements Runnable{
     }
 
     private void update(){
-
+        //actualiza la posicion del jugador
+        player.update();
     }
 
     private void draw(){

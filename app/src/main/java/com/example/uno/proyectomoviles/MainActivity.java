@@ -30,11 +30,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         //Iniciando game activity
-        startActivity(new Intent(this, GameActivity.class));
+        startActivity(new Intent(MainActivity.this, GameActivity.class));
     }
 
-    @Override
-    public void onPointerCaptureChanged(boolean hasCapture) {
-
-    }
 }
