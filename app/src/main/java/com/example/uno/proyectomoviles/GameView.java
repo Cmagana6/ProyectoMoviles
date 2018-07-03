@@ -1,6 +1,10 @@
 package com.example.uno.proyectomoviles;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 public class GameView extends SurfaceView implements Runnable{
@@ -11,9 +15,26 @@ public class GameView extends SurfaceView implements Runnable{
     //hilo del juego
     private Thread gameThread = null;
 
+    private Player player;
+
+    //Estos objetos se utilizaran para dibujar la superficie
+    private Paint paint;
+    private Canvas canvas;
+    private SurfaceHolder surfaceHolder;
+
+
     //constructor
     public GameView(Context context){
+
         super(context);
+
+        //Inicializando el player
+        player = new Player(Context);
+
+        //Inicializando los objetos para dibujar
+        surfaceHolder = getHolder();
+        paint = new Paint();
+
     }
 
     @Override
@@ -35,7 +56,18 @@ public class GameView extends SurfaceView implements Runnable{
     }
 
     private void draw(){
-
+        //Checkea que la superficie sea valida
+        if(surfaceHolder.getSurface().isValid()){
+            //Lockea el canvas
+            canvas = surfaceHolder.lockCanvas();
+            //Dibujando un color de fondo para el canvas
+            canvas.drawColor(Color.BLACK);
+            //Dibujando el jugador
+            canvas.drawBitmap(player.getBitmap(),
+                    player.getX(),player.getY(),paint);
+            //Desbloqueando el canvas
+            surfaceHolder.unlockCanvasAndPost(canvas);
+        }
     }
 
     private void control(){
