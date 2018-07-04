@@ -1,6 +1,7 @@
 package com.example.uno.proyectomoviles;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -48,6 +49,15 @@ public class GameView extends SurfaceView implements Runnable {
     //indicador para Game Over
     private boolean isGameOver;
 
+    //holder de puntajes
+    int score;
+
+    //holder de puntajes altos
+    int highScore[] = new int [4];
+
+    //Shared Preferences para almacenar los puntajes altos
+    SharedPreferences sharedPreferences;
+
 
     //constructor
 
@@ -79,6 +89,18 @@ public class GameView extends SurfaceView implements Runnable {
         countMisses = 0;
         isGameOver = false;
 
+        //seteando el puntaje en 0 inicialmente
+        score = 0;
+
+        sharedPreferences = context.getSharedPreferences("SHAR_PREF_NAME", Context.MODE_PRIVATE);
+
+        //iniciando el arreglo de puntajes altos con los valores previos
+        highScore[0] = sharedPreferences.getInt("score1", 0);
+        highScore[1] = sharedPreferences.getInt("score2", 0);
+        highScore[2] = sharedPreferences.getInt("score3", 0);
+        highScore[3] = sharedPreferences.getInt("score4", 0);
+
+
     }
 
     @Override
@@ -96,6 +118,10 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void update() {
+
+        //incrementando el puntaje cuando pasa el tiempo
+        score++;
+
         //actualiza la posicion del jugador
         player.update();
 
@@ -127,24 +153,78 @@ public class GameView extends SurfaceView implements Runnable {
         else {
             //si el enemigo apenas entró
             if (flag) {
-                //si la coordenada x de player es mayor que la coordenada x de enemies
-                //por ejemplo si enemies justo paso player
-                if (Rect.intersects(player.getDetectCollision(), friend.getDetectCollision())) {
 
-                    //mostrando el boom en la  colision
-                    boom.setX(friend.getX());
-                    boom.setY(friend.getY());
-                    //seteando playing false para parar el juego
-                    playing = false;
-                    //seteando  isGameOver true cuando el juego termina
-                    isGameOver = true;
+                //si la coordenada X de player es mayor que la coordenada x de enemies
+                if (player.getDetectCollision().exactCenterX() & gt;=enemies.getDetectCollision().exactCenterX()){
+
+                    //incrementando countMisses
+                    countMisses++;
+
+
+                    //seteando la bandera a  false asi solo se ejecuta cuando el enemigo entra en la pantalla
+                    flag = false;
+                    //si no Misses es igual a 3, entonces es  game over.
+                    if (countMisses == 3) {
+
+                        //seteando playing false para parar el juego.
+                        playing = false;
+                        isGameOver = true;
+
+                        //Asignando los puntajes al arreglo de puntajes
+                        for (int i = 0; i&lt;4;i++){
+                            if (highScore[i] & lt;score){
+
+                                final int finalI = i;
+                                highScore[i] = score;
+                                break;
+                            }
+                        }
+
+                        //almacenando los puntajes a traves de Shared Preferences
+                        SharedPreferences.Editor e = sharedPreferences.edit();
+                        for (int i = 0; i & lt; 4 ;i++){
+                            int j = i + 1;
+                            e.putInt("score" + j, highScore[i]);
+                        }
+                        e.apply();
+                    }
+                }
+            }
+        }
+
+        //actualizando las coordenadas de la nave friend
+        friend.update(player.getSpeed());
+        //checkeando colision entre player y friend
+        if(Rect.intersects(player.getDetectCollision(),friend.getDetectCollision())){
+
+            //mostrando el boom en la collision
+            boom.setX(friend.getX());
+            boom.setY(friend.getY());
+            //seteando playing false para parar el juego
+            playing = false;
+            //setting the isGameOver true as the game is over
+            isGameOver = true;
+
+            //Assigning the scores to the highscore integer array
+            for(int i=0;i&lt;4;i++){
+                if(highScore[i]&lt;score){
+
+                    final int finalI = i;
+                    highScore[i] = score;
+                    break;
                 }
             }
 
-            friend.update(player.getSpeed());
-
+            //storing the scores through shared Preferences
+            SharedPreferences.Editor e = sharedPreferences.edit();
+            for(int i=0;i&lt;4;i++){
+                int j = i+1;
+                e.putInt("score"+j,highScore[i]);
+            }
+            e.apply();
         }
     }
+
 
         private void draw () {
             //Checkea que la superficie sea valida
@@ -161,6 +241,11 @@ public class GameView extends SurfaceView implements Runnable {
                     paint.setStrokeWidth(s.getStarWidth());
                     canvas.drawPoint(s.getX(), s.getY(), paint);
                 }
+
+                //dibujando el puntaje en la pantalla de juego
+                paint.setTextSize(30);
+                canvas.drawText("Score:"+score,100,50,paint);
+
                 //Dibujando el jugador
                 canvas.drawBitmap(player.getBitmap(),
                         player.getX(), player.getY(), paint);
@@ -222,7 +307,7 @@ public class GameView extends SurfaceView implements Runnable {
 
         }
 
-    
+
         @Override
         public boolean onTouchEvent (MotionEvent motionEvent){
             switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
