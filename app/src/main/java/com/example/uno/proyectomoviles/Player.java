@@ -3,6 +3,7 @@ package com.example.uno.proyectomoviles;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 
 public class Player {
 
@@ -16,7 +17,6 @@ public class Player {
     //velocidad del personaje (movimiento)
     private int speed = 0;
 
-<<<<<<< HEAD
     //booleano para verificar si la nave esta acelerando
     private boolean boosting;
 
@@ -31,22 +31,27 @@ public class Player {
     private final int MIN_SPEED = 1;
     private final int MAX_SPEED = 20;
 
-    //constructor
-    public Player(Context context){
-=======
+    private Rect detectCollision;
 
         //constructor
     public Player(Context context, int screenX, int screenY){
->>>>>>> a5900e83d4877b83b8c1798f012cbadc1459fbe2
         x = 75;
         y = 50;
         speed = 1;
 
         // agarrando el bitmap de drawable resources
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.player);
-<<<<<<< HEAD
+
+        //calculando maxY
+        maxY = screenY - bitmap.getHeight();
+        //el menor valor de y es 0 que siempre será 0
+        minY = 0;
+
         //boost es falso al principio
         boosting = false;
+
+        //iniciando objeto Rect
+        detectCollision = new Rect(x,y,bitmap.getWidth(), bitmap.getHeight());
     }
 
 
@@ -57,15 +62,8 @@ public class Player {
     }
 
     public void stopBoosting(){
-=======
 
-       //calculando maxY
-        maxY = screenY - bitmap.getHeight();
-        //el menor valor de y es 0 que siempre será 0
-        minY = 0;
-
-        //setting the boosting value to false initially
->>>>>>> a5900e83d4877b83b8c1798f012cbadc1459fbe2
+       //setting the boosting value to false initially
         boosting = false;
     }
 
@@ -94,6 +92,17 @@ public class Player {
         if (y > maxY){
             y = maxY;
         }
+
+        //añadiendo objeto rect arriba, abajo, izquierda y derecha
+        detectCollision.left = x;
+        detectCollision.top = y;
+        detectCollision.right = x+ bitmap.getWidth();
+        detectCollision.bottom = y + bitmap.getHeight();
+    }
+
+    //obteniendo el objeto rect
+    public Rect getDetectCollision(){
+        return detectCollision;
     }
 
     // getters

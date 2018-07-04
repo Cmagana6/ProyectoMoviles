@@ -4,17 +4,16 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-<<<<<<< HEAD
-public class GameView extends SurfaceView implements Runnable {
-=======
+
 import java.util.ArrayList;
 
 public class GameView extends SurfaceView implements Runnable{
->>>>>>> a5900e83d4877b83b8c1798f012cbadc1459fbe2
+
 
     //booleano para verificar si se esta jugando o no
     volatile boolean playing;
@@ -29,17 +28,19 @@ public class GameView extends SurfaceView implements Runnable{
     private Canvas canvas;
     private SurfaceHolder surfaceHolder;
 
+    private Friend friend;
+
 
     //Añadiendo lista de estrellas
     private ArrayList<Star> stars = new ArrayList<Star>();
 
+    //definiendo el objeto boom
+    private Boom boom;
+
 
     //constructor
-<<<<<<< HEAD
-    public GameView(Context context) {
-=======
+
     public GameView(Context context, int screenX, int screenY){
->>>>>>> a5900e83d4877b83b8c1798f012cbadc1459fbe2
 
         super(context);
 
@@ -56,6 +57,13 @@ public class GameView extends SurfaceView implements Runnable{
             Star s = new Star(screenX, screenY);
             stars.add(s);
         }
+
+        //iniciando objeto Boom
+        boom = new Boom(context);
+
+        //iniciando el objeto de la clase Friend
+        friend = new Friend(context, screenX, screenY);
+
 
     }
 
@@ -76,6 +84,31 @@ public class GameView extends SurfaceView implements Runnable{
     private void update() {
         //actualiza la posicion del jugador
         player.update();
+
+        boom.setX(-250);
+        boom.setY(-250);
+
+
+        for (Star s : stars){
+            s.update(player.getSpeed());
+        }
+
+
+        enemies.update(player.getSpeed());
+
+            //si la colision ocurre con Player
+            if(Rect.intersects(player.getDetectCollision(), enemies.getDetectCollision())){
+
+                //mostrando el boom en la ubicacion
+                boom.setX(enemies.getX());
+                boom.setY(enemies.getY());
+
+                //moviendo al enemigo afuera del borde izquierdo
+               enemies.setX(-200);
+            }
+
+          friend.update(player.getSpeed());
+
     }
 
     private void draw() {
@@ -96,6 +129,24 @@ public class GameView extends SurfaceView implements Runnable{
             //Dibujando el jugador
             canvas.drawBitmap(player.getBitmap(),
                     player.getX(), player.getY(), paint);
+
+
+            //dibujando imagen boom
+            canvas.drawBitmap(
+                    boom.getBitmap(),
+                    boom.getX(),
+                    boom.getY(),
+                    paint
+            );
+
+            //dibujando imagen friend
+            canvas.drawBitmap(
+                    friend.getBitmap(),
+                    friend.getX(),
+                    friend.getY(),
+                    paint
+            );
+
             //Desbloqueando el canvas
             surfaceHolder.unlockCanvasAndPost(canvas);
         }
@@ -128,17 +179,7 @@ public class GameView extends SurfaceView implements Runnable{
 
     }
 
-<<<<<<< HEAD
-    @Override
-    public boolean onTouchEvent(MotionEvent motionEvent) {
-        switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
-            case MotionEvent.ACTION_UP:
 
-                break;
-            case MotionEvent.ACTION_DOWN:
-
-                break;
-=======
 
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
@@ -149,7 +190,7 @@ public class GameView extends SurfaceView implements Runnable{
         case MotionEvent.ACTION_DOWN:
         player.setBoosting();
         break;
->>>>>>> a5900e83d4877b83b8c1798f012cbadc1459fbe2
+
         }
         return true;
     }
