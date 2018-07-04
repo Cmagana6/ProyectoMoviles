@@ -18,13 +18,21 @@ public class Player {
 
 
         //constructor
-    public Player(Context context){
+    public Player(Context context, int screenX, int screenY){
         x = 75;
         y = 50;
         speed = 1;
 
         // agarrando el bitmap de drawable resources
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.player);
+
+       //calculando maxY
+        maxY = screenY - bitmap.getHeight();
+        //el menor valor de y es 0 que siempre será 0
+        minY = 0;
+
+        //setting the boosting value to false initially
+        boosting = false;
     }
 
     //metodo para actualizar las coordenadas del personaje
