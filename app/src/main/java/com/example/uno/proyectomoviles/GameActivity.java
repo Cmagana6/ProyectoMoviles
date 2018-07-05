@@ -13,19 +13,16 @@ public class GameActivity  extends AppCompatActivity{
     private GameView gameView;
 
     @Override
-    protected void onCreate( Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //obteniendo visualizacion del objeto
         Display display = getWindowManager().getDefaultDisplay();
 
-        //obteniendo la resolucion de la pantalla en el objeto
         Point size = new Point();
         display.getSize(size);
 
         //Inicializando el objeto gameView
-        //pasando tamaño de pantalla
-        gameView = new GameView (this, size.x, size.y);
+        gameView = new GameView(this, size.x, size.y);
 
         //Agregandolo al contenido
         setContentView(gameView);

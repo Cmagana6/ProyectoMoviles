@@ -24,9 +24,11 @@ public class Boom {
         //solo sera visible en la fraccion de segundo
         //despues de la colision
 
-        x = -250;
-        y = -250;
+        x = -150;
+        y = -150;
     }
+
+
 
     public Bitmap getBitmap() {
         return bitmap;

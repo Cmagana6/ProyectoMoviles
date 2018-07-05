@@ -121,4 +121,5 @@ public class Player {
     public int getSpeed() {
         return speed;
     }
+
 }
