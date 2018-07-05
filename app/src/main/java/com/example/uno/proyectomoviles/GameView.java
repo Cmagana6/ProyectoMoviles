@@ -12,7 +12,7 @@ import android.view.SurfaceView;
 
 import java.util.ArrayList;
 
-public class GameView extends SurfaceView implements Runnable{
+public class GameView extends SurfaceView implements Runnable {
 
 
     //booleano para verificar si se esta jugando o no
@@ -28,6 +28,12 @@ public class GameView extends SurfaceView implements Runnable{
     private Canvas canvas;
     private SurfaceHolder surfaceHolder;
 
+    //arreglo de enemigos
+    private Enemy[] enemies;
+
+    //agregando enemigos
+    private int enemyCount = 4;
+
     private Friend friend;
 
 
@@ -40,7 +46,7 @@ public class GameView extends SurfaceView implements Runnable{
 
     //constructor
 
-    public GameView(Context context, int screenX, int screenY){
+    public GameView(Context context, int screenX, int screenY) {
 
         super(context);
 
@@ -53,9 +59,14 @@ public class GameView extends SurfaceView implements Runnable{
 
         //añadiendo estrellas
         int starNums = 100;
-        for (int i = 0; i < starNums; i++){
+        for (int i = 0; i < starNums; i++) {
             Star s = new Star(screenX, screenY);
             stars.add(s);
+        }
+
+        enemies = new Enemy[enemyCount];
+        for (int i = 0; i < enemyCount; i++) {
+            enemies[i] = new Enemy(context, screenX, screenY);
         }
 
         //iniciando objeto Boom
@@ -66,6 +77,7 @@ public class GameView extends SurfaceView implements Runnable{
 
 
     }
+
 
     @Override
     public void run() {
@@ -89,25 +101,25 @@ public class GameView extends SurfaceView implements Runnable{
         boom.setY(-250);
 
 
-        for (Star s : stars){
+        for (Star s : stars) {
             s.update(player.getSpeed());
         }
 
-
-        enemies.update(player.getSpeed());
-
+        for (int i = 0; i < enemyCount; i++) {
+            enemies[i].update(player.getSpeed());
             //si la colision ocurre con Player
-            if(Rect.intersects(player.getDetectCollision(), enemies.getDetectCollision())){
+            if (Rect.intersects(player.getDetectCollision(), enemies[i].getDetectCollision())) {
 
                 //mostrando el boom en la ubicacion
-                boom.setX(enemies.getX());
-                boom.setY(enemies.getY());
+                boom.setX(enemies[i].getX());
+                boom.setY(enemies[i].getY());
 
                 //moviendo al enemigo afuera del borde izquierdo
-               enemies.setX(-200);
+                enemies[i].setX(-200);
             }
+        }
 
-          friend.update(player.getSpeed());
+        friend.update(player.getSpeed());
 
     }
 
@@ -122,7 +134,7 @@ public class GameView extends SurfaceView implements Runnable{
             paint.setColor(Color.WHITE);
 
             //dibujando las estrellas
-            for(Star s : stars){
+            for (Star s : stars) {
                 paint.setStrokeWidth(s.getStarWidth());
                 canvas.drawPoint(s.getX(), s.getY(), paint);
             }
@@ -130,6 +142,15 @@ public class GameView extends SurfaceView implements Runnable{
             canvas.drawBitmap(player.getBitmap(),
                     player.getX(), player.getY(), paint);
 
+
+            for (int i = 0; i < enemyCount; i++) {
+                canvas.drawBitmap(
+                        enemies[i].getBitmap(),
+                        enemies[i].getX(),
+                        enemies[i].getY(),
+                        paint
+                );
+            }
 
             //dibujando imagen boom
             canvas.drawBitmap(
@@ -180,16 +201,15 @@ public class GameView extends SurfaceView implements Runnable{
     }
 
 
-
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
-        switch (motionEvent.getAction() & MotionEvent.ACTION_MASK){
-        case MotionEvent.ACTION_UP:
-        player.stopBoosting();
-        break;
-        case MotionEvent.ACTION_DOWN:
-        player.setBoosting();
-        break;
+        switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
+            case MotionEvent.ACTION_UP:
+                player.stopBoosting();
+                break;
+            case MotionEvent.ACTION_DOWN:
+                player.setBoosting();
+                break;
 
         }
         return true;
