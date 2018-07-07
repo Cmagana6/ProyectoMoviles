@@ -1,79 +1,85 @@
 package com.example.uno.proyectomoviles;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
+import android.widget.Toast;
 
 import java.util.Random;
 
 public class Enemy {
-    //bitmap para obtener la imagen del enemigo
     private Bitmap bitmap;
-
-    //coordenadas
     private int x;
     private int y;
-
-    //velocidad del enemigo
     private int speed = 1;
 
-    //min y maximo de las coordenadas para mandener al enemigo en pantalla
     private int maxX;
     private int minX;
 
     private int maxY;
     private int minY;
 
-    //creando objeto rectangular
+    Context context;
+    Activity activity;
+
+    //Creando un objeto RECT
     private Rect detectCollision;
 
-    public Enemy(Context context, int screenX, int screenY){
+    public Enemy(Context context, int screenX, int screenY) {
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.enemy);
-
         maxX = screenX;
         maxY = screenY;
         minX = 0;
         minY = 0;
 
-        //generando coordenadas aleatorias para poner al enemigo
+        this.context = context;
+
+        activity = (Activity) context;
         Random generator = new Random();
         speed = generator.nextInt(6) + 10;
         x = screenX;
         y = generator.nextInt(maxY) - bitmap.getHeight();
+
+        //Inicializando el objeto RECT
+        detectCollision = new Rect(x, y, bitmap.getWidth(), bitmap.getHeight());
     }
 
-    public void update(int playerSpeed){
-        //reduce x para que se mueva de derecha a izquierda
+    public void update(int playerSpeed) {
         x -= playerSpeed;
         x -= speed;
-
-        //si el enemigo llega al lado izquierdo de la pantalla
-        if (x < minX - bitmap.getWidth()){
-            //regresar al enemigo al lado derecho
+        if (x < minX - bitmap.getWidth()) {
             Random generator = new Random();
             speed = generator.nextInt(10) + 10;
             x = maxX;
             y = generator.nextInt(maxY) - bitmap.getHeight();
         }
 
-        //agregando lados para detectar colisiones
+
+
+        //Agregando las cuatro direcciones hacia el objeto
         detectCollision.left = x;
         detectCollision.top = y;
         detectCollision.right = x + bitmap.getWidth();
         detectCollision.bottom = y + bitmap.getHeight();
+
+
     }
 
-    //setter en x para poder cambiarlo despues de colisionar
+    //Metodo para cambiar la coordenada x luego de una colision
     public void setX(int x){
+
         this.x = x;
+
     }
 
-    //getters
-    public Rect getDetectCollision(){
+    //Metodo para detectar una colision
+    public Rect getDetectCollision() {
         return detectCollision;
     }
 
+    //getters
     public Bitmap getBitmap() {
         return bitmap;
     }
@@ -86,7 +92,11 @@ public class Enemy {
         return y;
     }
 
+
+
+
     public int getSpeed() {
         return speed;
     }
+
 }
