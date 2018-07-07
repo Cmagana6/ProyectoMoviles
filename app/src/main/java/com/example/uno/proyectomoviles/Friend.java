@@ -20,7 +20,7 @@ public class Friend {
     private int maxY;
     private int minY;
 
-    //creando objeto Rect para la nave friend
+    //Creando el objeto RECT para una nave amiga
     private Rect detectCollision;
 
 
@@ -35,10 +35,8 @@ public class Friend {
         x = screenX;
         y = generator.nextInt(maxY) - bitmap.getHeight();
 
-        //iniciando objeto rect
+        //Inicializando el objeto rect
         detectCollision = new Rect(x, y, bitmap.getWidth(), bitmap.getHeight());
-
-
     }
 
     public void update(int playerSpeed) {
@@ -51,18 +49,20 @@ public class Friend {
             y = generator.nextInt(maxY) - bitmap.getHeight();
         }
 
-        //añadiendo arriba, abajo, izquierda y derecha del objeto rect
+        //Agregando arriba abajo izquierda y derecha para el objeto rect
         detectCollision.left = x;
         detectCollision.top = y;
         detectCollision.right = x + bitmap.getWidth();
         detectCollision.bottom = y + bitmap.getHeight();
     }
 
+
+    //Obteniendo una deteccion de colision
     public Rect getDetectCollision() {
         return detectCollision;
     }
 
-
+    //getters
     public Bitmap getBitmap() {
         return bitmap;
     }
@@ -74,4 +74,5 @@ public class Friend {
     public int getY() {
         return y;
     }
+
 }
