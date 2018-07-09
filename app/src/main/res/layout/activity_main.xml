@@ -10,22 +10,25 @@
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:paddingTop="16dp"
-    android:background="@drawable/splash">
+    android:background="@drawable/backgroundgame">
 
     <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/buttonPlay"
-        android:background="@drawable/playnow"
+        android:layout_width="215dp"
+        android:layout_height="67dp"
         android:layout_above="@+id/buttonScore"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="11dp"
+        android:src="@drawable/boton1" />
 
     <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="235dp"
+        android:layout_height="67dp"
         android:id="@+id/buttonScore"
-        android:background="@drawable/highscore"
+        android:src="@drawable/boton2"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"/>
+
+
 
 </RelativeLayout>
