@@ -207,14 +207,23 @@ public class GameView extends SurfaceView implements Runnable{
             }
 
           friend.update(player.getSpeed());
-            //revisa si hay collision
+            //revisa si se ha colisionado con una nave aliada
         if (Rect.intersects(player.getDetectCollision(), friend.getDetectCollision())){
-            // muestra explosion en la colision
+            //Muestra una animacion de explosion
             boom.setX(friend.getX());
             boom.setY(friend.getY());
             //se detiene el juego
             playing = false;
             isGameOver = true;
+
+            if (isGameOver){
+                paint.setTextSize(150);
+                paint.setTextAlign(Paint.Align.CENTER);
+
+                int yPos = (int) ((canvas.getHeight() / 2) - ((paint.descent() + paint.ascent())/2));
+                canvas.drawText("GAME OVER", canvas.getWidth() / 2, yPos, paint);
+                surfaceHolder.unlockCanvasAndPost(canvas);
+            }
 
             gameOnsound.stop();
             gameOversound.start();
@@ -236,9 +245,9 @@ public class GameView extends SurfaceView implements Runnable{
                 e.putInt("puntaje"+j,highScore[i]);
             }
             e.apply();
+            }
         }
 
-    }
 
     private void draw() {
         //Checkea que la superficie sea valida
